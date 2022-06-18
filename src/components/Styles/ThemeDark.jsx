@@ -7,13 +7,13 @@ const ThemeDark = createTheme({
       default: "#dee8fa",
     },
     text: {
-      primary: "#041940",
+      primary: "#06283D"
     },
     primary: {
       main: "#7da5f0",
     },
     secondary: {
-      main: "#C9B6E4",
+      main: "#06283D",
     },
   },
 });
