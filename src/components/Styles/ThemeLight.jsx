@@ -6,14 +6,16 @@ const ThemeLight = createTheme({
       default: "#242d40",
     },
     text: {
-      primary: "#DBDFFD",
+      primary: "#06283D",
+      secondary: "#a9b2b8",
     },
     primary: {
-      main: "#3624a6",
+      main: "#A760FF",
+      
     },
     secondary: {
-      main: "#C9B6E4",
-    },
+      main: "#06283D",
+    }
   },
 });
 
