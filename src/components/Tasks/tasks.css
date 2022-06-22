@@ -1,0 +1,14 @@
+.completed{
+    text-decoration: line-through;
+}
+.inputs{
+    display: flex;
+    flex-direction: column;
+}
+input{
+    border-radius: 5%;
+    margin-bottom: 5%;
+}
+button{
+    border-radius: 5%;
+}

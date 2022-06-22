@@ -9,10 +9,7 @@ import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import { ThemeProvider } from "@mui/material/styles";
-import BasedTheme from "../Styles/BasedTheme";
-import Snackbar from "@mui/material/Snackbar";
-import IconButton from "@mui/material/IconButton";
-import CloseIcon from "@mui/icons-material/Close";
+import BasedTheme from "../themes/BasedTheme";
 import { useState } from "react";
 import "./signupinput.css";
 import Tasks from "../Tasks/Tasks";
@@ -35,61 +32,39 @@ function Copyright(props) {
   );
 }
 
-const basedTheme = BasedTheme;
 
 const SignUp = () => {
-  const [open, setOpen] = useState(false);
   const [taskComponent, setTaskComponent] = useState(true);
-  let countID = 10;
   const [values, setValues] = useState({
     firstName: "",
     email: "",
     password: "",
-    ID: countID,
+    ID: 1,
   });
-
-  const handleClose = (event, reason) => {
-    if (reason === "clickaway") {
-      return;
-    }
-
-    setOpen(false);
-  };
-
-  const action = (
-    <>
-      <IconButton
-        size="small"
-        aria-label="close"
-        color="inherit"
-        onClick={handleClose}
-      >
-        <CloseIcon fontSize="small" />
-      </IconButton>
-    </>
-  );
-
+  
   const handleSubmit = (e) => {
     e.preventDefault();
     if (!values.firstName || !values.email || !values.password) {
-      console.log("warning");
+      console.log("warning parametros vacios pa'");
+
+    } else {
+      setTaskComponent(!taskComponent);
+      localStorage.setItem("email-acount", JSON.stringify(values.email));
+      localStorage.setItem("password-acount", JSON.stringify(values.password));
+      localStorage.setItem("name-acount", JSON.stringify(values.firstName));
+      localStorage.setItem("id-acount", JSON.stringify(values.ID));
+      localStorage.setItem(values.firstName + "'s Tasks", [
+        JSON.stringify([["eo"]]),
+      ]);
     }
-    setOpen(true);
-    setTaskComponent(!taskComponent);
-    localStorage.setItem("email-acount", JSON.stringify(values.email));
-    localStorage.setItem("password-acount", JSON.stringify(values.password));
-    localStorage.setItem("name-acount", JSON.stringify(values.firstName));
-    localStorage.setItem("id-acount", JSON.stringify(values.ID));
-    localStorage.setItem(values.firstName + "'s Tasks", [
-      JSON.stringify([["eo"]]),
-    ]);
   };
 
   const onChange = (e) => {
     setValues({ ...values, [e.target.name]: e.target.value });
-    countID = countID + 1;
   };
 
+    const basedTheme = BasedTheme;
+    
   return (
     <>
       {taskComponent ? (
@@ -122,7 +97,7 @@ const SignUp = () => {
                       <Grid item xs={12}>
                         <TextField
                           name="firstName"
-                          required={true}
+                          required
                           fullWidth
                           id="firstName"
                           label="First Name"
@@ -156,13 +131,6 @@ const SignUp = () => {
                   letter, 1 number and 1 special character!
                 </span> */}
                       </Grid>
-                      <Snackbar
-                        open={open}
-                        autoHideDuration={6000}
-                        onClose={handleClose}
-                        message="Create Account"
-                        action={action}
-                      />
                     </Grid>
                     <Button
                       type="submit"
