@@ -44,8 +44,7 @@ export default function SignInSide() {
     let Password = localStorage.getItem("password-acount").replace(/"/g, "");
 
     if (!userEmail || !userPassword) {
-      setWarning(true);
-      console.log(warning);
+      setWarning(!warning);
     } else if (userEmail !== emailAdress || userPassword !== Password) {
       setWarning(true);
       console.log(warning);

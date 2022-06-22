@@ -19,8 +19,8 @@ import {
   Typography,
   Container,
 } from "@mui/material";
-import ThemeLight from "../Styles/ThemeLight";
-import ThemeDark from "../Styles/ThemeDark";
+import ThemeLight from "../themes/ThemeLight";
+import ThemeDark from "../themes/ThemeDark";
 import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
 import ListItemButton from "@mui/material/ListItemButton";
@@ -28,6 +28,8 @@ import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
 import Checkbox from "@mui/material/Checkbox";
 import IconButton from "@mui/material/IconButton";
+import EditIcon from "@mui/icons-material/Edit";
+import "./tasks.css";
 
 const themeDark = ThemeDark;
 const themeLight = ThemeLight;
@@ -37,7 +39,6 @@ function Tasks() {
   const [open, setOpen] = useState(false);
 
   let Name = localStorage.getItem("name-acount").replace(/"/g, "");
-  // let TasksArray = localStorage.getItem("tasks-acount").replace(/"/g, "");
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -51,35 +52,59 @@ function Tasks() {
   const [tareaDescription, setTareaDescription] = useState("");
   const addTodo = () => {
     const newTodo = {
-      id: 1,
+      id: new Date().getTime(),
       title: tarea,
       descripitom: tareaDescription,
+      completed: false,
     };
     setTodo([...todo, newTodo]);
   };
 
-  const handleClick = () => {
-    setTodo(todo.filter())
-  };
-
-  const [checked, setChecked] = React.useState([0]);
-  const handleToggle = (value) => () => {
-    const currentIndex = checked.indexOf(value);
-    const newChecked = [...checked];
-
-    if (currentIndex === -1) {
-      newChecked.push(value);
-    } else {
-      newChecked.splice(currentIndex, 1);
-    }
-
-    setChecked(newChecked);
-  };
+  function deletTodo(id) {
+    const updateTodo = [...todo].filter((todo) => todo.id !== id);
+    setTodo(updateTodo);
+  }
+  function toogleCompleted(id) {
+    const updateTodo = [...todo].map((todo) => {
+      if (todo.id === id) {
+        todo.completed = !todo.completed;
+      }
+      return todo;
+    });
+    setTodo(updateTodo);
+  }
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    addTodo();
+    if (!tarea || !tareaDescription) {
+      console.log("Empty Tarea!");
+    } else {
+      addTodo();
+      setTarea("");
+      setTareaDescription("");
+    }
   };
+  const [todoEditing, setTodoEditing] = useState(null);
+  const [editingText, setEditingText] = useState("");
+  const [editingDes, setEditingDes] = useState("");
+
+  function submitEdits(id) {
+    const updateTodo = [...todo].map((todo) => {
+      if (todo.id === id) {
+        if(!editingText || !editingDes){
+          console.log("Empty edit");
+        }else{
+          todo.title = editingText;
+          todo.descripitom = editingDes;
+        }
+      }
+      return todo;
+    });
+    setTodo(updateTodo);
+    setTodoEditing(null);
+    setEditingText("");
+    setEditingDes("");
+  }
 
   return (
     <ThemeProvider theme={light ? themeLight : themeDark}>
@@ -196,31 +221,56 @@ function Tasks() {
                       <IconButton
                         edge="end"
                         aria-label="comments"
-                        onClick={handleClick}
+                        onClick={() => deletTodo(todo.id)}
                       >
                         <Delete />
                       </IconButton>
                     }
                     disablePadding
                   >
-                    <ListItemButton
-                      role={undefined}
-                      onClick={handleToggle(todo.id)}
-                      dense
-                    >
+                    <ListItemButton>
                       <ListItemIcon>
                         <Checkbox
                           edge="start"
-                          checked={checked.indexOf(todo.id) !== -1}
-                          tabIndex={-1}
-                          disableRipple
+                          onChange={() => toogleCompleted(todo.id)}
+                          checked={todo.completed}
                         />
                       </ListItemIcon>
-                      <ListItemText
-                        id={todo.id}
-                        primary={todo.title}
-                        secondary={todo.descripitom}
-                      />
+                      {todoEditing === todo.id ? (
+                        <Container className="inputs">
+                          <input
+                            type="text"
+                            onChange={(e) => setEditingText(e.target.value)}
+                            value={editingText}
+                            placeholder="Title"
+                          />
+                          <input
+                            type="text"
+                            onChange={(e) => setEditingDes(e.target.value)}
+                            value={editingDes}
+                            placeholder="Description"
+                          />
+                        </Container>
+                      ) : (
+                        <ListItemText
+                          className={todo.completed ? "completed" : null}
+                          id={todo.id}
+                          primary={todo.title}
+                          secondary={todo.descripitom}
+                          sx={{ width: 300 }}
+                        />
+                      )}
+                    </ListItemButton>
+                    <ListItemButton>
+                      {todoEditing === todo.id ? (
+                        <button onClick={() => submitEdits(todo.id)}>
+                          Listo
+                        </button>
+                      ) : (
+                        <IconButton onClick={() => setTodoEditing(todo.id)}>
+                          <EditIcon />
+                        </IconButton>
+                      )}
                     </ListItemButton>
                   </ListItem>
                 );

@@ -6,8 +6,7 @@ const ThemeLight = createTheme({
       default: "#242d40",
     },
     text: {
-      primary: "#06283D",
-      secondary: "#a9b2b8",
+      primary: "#06283D"
     },
     primary: {
       main: "#A760FF",
