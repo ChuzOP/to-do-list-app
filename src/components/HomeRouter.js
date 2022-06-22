@@ -1,6 +1,7 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import SignUp from "./SignUp";
-import SignInSide from "./SingInSide";
+import SignUp from "./FormsComponents/SignUp";
+import SignInSide from "./FormsComponents/SingInSide";
+
 import Tasks from "./Tasks/Tasks";
 
 function HomeRouter() {
